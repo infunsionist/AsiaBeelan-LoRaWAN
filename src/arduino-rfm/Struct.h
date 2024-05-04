@@ -85,72 +85,32 @@ typedef struct{
 
 //Struct used for storing settings of the mote
 typedef struct {
-    unsigned char Confirm;          //0x00 Unconfirmed, 0x01 Confirmed
-    unsigned char Mport;            //Port 1-223
-    unsigned char Mote_Class;       //0x00 Class A, 0x01 Class C
-    unsigned char Datarate_Tx;      //See RFM file
-    unsigned char Datarate_Rx;      //See RFM file
-    unsigned char Channel_Tx;       //See RFM file
-    unsigned char Channel_Rx;       //See RFM filed
-    unsigned char Channel_Hopping;  //0x00 No hopping, 0x01 Hopping
-    unsigned char Transmit_Power;   //0x00 to 0x0F
-    unsigned int Rx1_Delay;
-    unsigned int Rx2_Delay;         // Rx2_Delay >= Rx1_Delay + RX1_Window
-    unsigned int RX1_Window;
-    unsigned int RX2_Window;
+    unsigned char Confirm;			//0x00 Unconfirmed, 0x01 Confirmed
+    unsigned char Mote_Class;		//0x00 Class A, 0x01 Class C
+    unsigned char Frame_Port_Tx;
+    unsigned char Datarate_Tx;		//See RFM file
+    unsigned char Datarate_Rx;		//See RFM file
+    unsigned char Channel_Tx;		//See RFM file
+    unsigned char Channel_Rx;		//See RFM filed
+    unsigned char Channel_Hopping;	//0x00 No hopping, 0x01 Hopping
+    unsigned char Transmit_Power;	//0x00 to 0x0F
 } sSettings;
 
 typedef enum {
   CH0 = 0,
   CH1 = 1,
   CH2 = 2,
-#ifndef IN_865 //IN_865 only supports 3 channels
   CH3 = 3,
   CH4 = 4,
   CH5 = 5,
   CH6 = 6,
   CH7 = 7,
-#endif
-#ifdef EU_868
-  CHRX2 = 8,
-#elif defined(IN_865)
-  CHRX2 = 3,
-#else
   CH8 = 8,
-#endif
   MULTI = 20
 } channel_t;
 
-
 typedef enum {
-    RFO_PIN  = 0,
-    PA_BOOST_PIN = 1
-} txPin_t;
-
-typedef enum {
-#if defined(US_915)
-    SF10BW125   = 0x00,
-    SF9BW125    = 0x01,
-    SF8BW125    = 0x02,
-    SF7BW125    = 0x03,
-    SF8BW500    = 0x04,
-    SF12BW500   = 0x08,
-    SF11BW500   = 0x09,
-    SF10BW500   = 0x0A,
-    SF9BW500    = 0x0B,
-    SF7BW500    = 0x0D
-#elif defined(AU_915)
-    SF10BW125   = 0x00,
-    SF9BW125    = 0x01,
-    SF8BW125    = 0x02,
-    SF7BW125    = 0x03,
-    SF8BW500    = 0x04,
-    SF12BW500   = 0x08,
-    SF11BW500   = 0x09,
-    SF10BW500   = 0x0A,
-    SF9BW500    = 0x0B,
-    SF7BW500    = 0x0D
-#elif defined(EU_868)
+#if defined(AS_923)
     SF12BW125   = 0x00,
     SF11BW125   = 0x01,
     SF10BW125   = 0x02,
@@ -158,31 +118,12 @@ typedef enum {
     SF8BW125    = 0x04,
     SF7BW125    = 0x05,
     SF7BW250    = 0x06
-#elif defined(AS_923) || defined(AS_923_2)
-    SF12BW125   = 0x00,
-    SF11BW125   = 0x01,
-    SF10BW125   = 0x02,
-    SF9BW125    = 0x03,
-    SF8BW125    = 0x04,
-    SF7BW125    = 0x05,
-    SF7BW250    = 0x06
-#elif defined(IN_865)
-    SF12BW125   = 0x00,
-    SF11BW125   = 0x01,
-    SF10BW125   = 0x02,
-    SF9BW125    = 0x03,
-    SF8BW125    = 0x04,
-    SF7BW125    = 0x05
 #endif
 } dataRates_t;
 
 typedef enum {CLASS_A, CLASS_C} devclass_t;
 
 typedef enum {NO_RX, NEW_RX} rx_t;
-
-typedef enum {NO_ACK, NEW_ACK} ack_t;
-
-typedef enum {MSG_UP, MSG_ACK} msg_t;
 
 #endif
 

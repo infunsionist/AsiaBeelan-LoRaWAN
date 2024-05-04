@@ -46,6 +46,7 @@
 ********************************************************************************************
 */
 
+
 #define LORAWAN_VERSION "1.0.0"
 /*
 *****************************************************************************************
@@ -55,95 +56,89 @@
 
 class LoRaWANClass
 {
-public:
-    LoRaWANClass();
-    ~LoRaWANClass();
+    public:
 
-    bool init(void);
-    bool join(void);
-    void sleep(void);
-    void wakeUp(void);
-    void setDeviceClass(devclass_t dev_class);
-    // OTAA credentials
-    void setDevEUI(const char *devEUI_in);
-    void setAppEUI(const char *appEUI_in);
-    void setAppKey(const char *appKey_in);
-    // ABP credentials
-    void setNwkSKey(const char *NwkKey_in);
-    void setAppSKey(const char *ApskKey_in);
-    void setDevAddr(const char *devAddr_in);
-    void sendUplink(char *data, unsigned int len, unsigned char confirm, unsigned char mport);
-    void setDataRate(unsigned char data_rate);
-    void setChannel(unsigned char channel);
-    unsigned char getChannel();
-    unsigned char getDataRate();
-    void setTxPower1(unsigned char power_idx);
-    void setTxPower(int level, txPin_t pinTx);
-    void setRx1Delay(unsigned int ms);
-    void setRx2Delay(unsigned int ms);
-    void setRx1Window(unsigned int ms);
-    void setRx2Window(unsigned int ms);
-    int getRssi();
-    int readData(char *outBuff);
-    bool readAck(void);
-    void sendACK();
-    void update(void);
-    void switchToClassC(sSettings *LoRa_Settings);
-    void onMessage(void(*callback)(sBuffer *Data_Rx, bool isConfirmed, uint8_t fPort));
+        LoRaWANClass();
+        ~LoRaWANClass();
+        
+        bool init(void);
+        bool join(void);
+        void setDeviceClass(devclass_t dev_class);
+        // OTAA credentials
+        void setDevEUI(const char *devEUI_in);
+        void setAppEUI(const char *appEUI_in);
+        void setAppKey(const char *appKey_in);
+        // ABP credentials
+        void setNwkSKey(const char *NwkKey_in);
+        void setAppSKey(const char *ApskKey_in);
+        void setDevAddr(const char *devAddr_in);
+        void sendUplink(char *data, unsigned int len, unsigned char confirm);
+        void sendUplinkHex(byte *data, unsigned int len, unsigned char confirm);
+        void setDataRate(unsigned char data_rate);
+        void setChannel(unsigned char channel);
+        unsigned char getChannel();
+        int getChannelFreq(unsigned char channel);
+        unsigned char getChannelRx();
+        int getChannelRxFreq(unsigned char channel);
+        unsigned char getDataRate();
+        unsigned char getDataRateRx();
+        void setTxPower(unsigned char power_idx);
+        int getTxPower();
+        int readData(char *outBuff);
+        int readDataByte(byte *outBuff);
+        int getFramePortRx();
+        void update(void);
 
-    // frame counter
-    unsigned int getFrameCounter();
-    void setFrameCounter(unsigned int FrameCounter);
+        // frame counter
+        unsigned int getFrameCounter();
+        unsigned int getFrameCounterRx();
+        void setFrameCounter(unsigned int FrameCounter);
 
-    // Declare public instead of private so they can be save on RTC ram in the main script before deep sleep for ESP
-    unsigned char DevEUI[8];
-    unsigned char AppEUI[8];
-    unsigned char AppKey[16];
-    unsigned char DevNonce[2];
-    unsigned char AppNonce[3];
-    unsigned char NetID[3];
-    unsigned char Address_Tx[4];
-    unsigned char NwkSKey[16];
-    unsigned char AppSKey[16];
-    unsigned int Frame_Counter_Tx;
-    sSettings LoRa_Settings;
+        void setFramePortTx(unsigned int port);
+        int getFramePortTx();
 
-private:
-    void randomChannel();
+    private:
+        void randomChannel();
 
-private:
-    // Messages
-    unsigned char Data_Tx[MAX_UPLINK_PAYLOAD_SIZE];
-    sBuffer Buffer_Tx;
-    unsigned char Data_Rx[MAX_DOWNLINK_PAYLOAD_SIZE];
-    sBuffer Buffer_Rx;
-    sLoRa_Message Message_Rx;
+    private:        
+        // Messages
+        unsigned char Data_Tx[64];
+        sBuffer Buffer_Tx;
+        unsigned char Data_Rx[64];
+        sBuffer Buffer_Rx;
+        sLoRa_Message Message_Rx;
 
-    //Callback function variable
-    void(*messageCallback)(sBuffer *Data_Rx, bool isConfirmed, uint8_t fPort) = NULL;
+        // Declare ABP session
+        unsigned char Address_Tx[4];
+        unsigned char NwkSKey[16];
+        unsigned char AppSKey[16];
+        unsigned int Frame_Counter_Tx;
+        sLoRa_Session Session_Data;
 
-    // Declare ABP session
-    sLoRa_Session Session_Data;
+        // Declare OTAA data struct
+        unsigned char DevEUI[8];
+        unsigned char AppEUI[8];
+        unsigned char AppKey[16];
+        unsigned char DevNonce[2];
+        unsigned char AppNonce[3];
+        unsigned char NetID[3];
+        sLoRa_OTAA OTAA_Data;
 
-    // Declare OTAA data struct
-    sLoRa_OTAA OTAA_Data;
+        // Declare LoRA settings struct
+        sSettings LoRa_Settings;
+        sRFM_pins LoRa_Pins;
 
-    unsigned char drate_common;
+        unsigned char drate_common;
 
-    // Lora Setting Class
-    devclass_t dev_class;
+        // Lora Setting Class
+        devclass_t dev_class;
 
-    // channel mode
-    unsigned char currentChannel;
+        // channel mode
+        unsigned char currentChannel;
 
-    // UART
-    RFM_command_t RFM_Command_Status;
-    rx_t Rx_Status;
-
-    // ACK reception
-    ack_t Ack_Status;
-
-    msg_t upMsg_Type;
+        // UART
+        RFM_command_t RFM_Command_Status;
+        rx_t Rx_Status;
 };
 
 #endif

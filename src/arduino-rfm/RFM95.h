@@ -45,9 +45,6 @@
 
 typedef enum {NO_MESSAGE,NEW_MESSAGE,CRC_OK,MIC_OK,ADDRESS_OK,MESSAGE_DONE,TIMEOUT,WRONG_MESSAGE} message_t;
 
-#define PA_OUTPUT_RFO_PIN          0
-#define PA_OUTPUT_PA_BOOST_PIN     1
-
 /*
 *****************************************************************************************
 * REGISTER DEFINITIONS
@@ -60,12 +57,12 @@ typedef enum {
     RFM_REG_FR_MSB          = 0x06,
     RFM_REG_FR_MID          = 0x07,
     RFM_REG_FR_LSB          = 0x08,
-    RFM_REG_OCP             = 0x0b,
     RFM_REG_PA_CONFIG       = 0x09,
+    RFM_REG_PA_DAC          = 0x4D,
+    RFM_REG_OCP             = 0x0B,
     RFM_REG_LNA             = 0x0C,
     RFM_REG_FIFO_ADDR_PTR   = 0x0D,
     RFM_REG_IRQ_FLAGS       = 0x12,
-    RFM_REG_LAST_RSSI       = 0x1A,
     RFM_REG_MODEM_CONFIG1   = 0x1D,
     RFM_REG_MODEM_CONFIG2   = 0x1E,
     RFM_REG_SYM_TIMEOUT_LSB = 0x1F,
@@ -77,8 +74,7 @@ typedef enum {
     RFM_REG_INVERT_IQ2      = 0x3b,
     RFM_REG_SYNC_WORD       = 0x39,
     RFM_REG_DIO_MAPPING1    = 0x40,
-    RFM_REG_DIO_MAPPING2    = 0x41,
-    RFM_REG_PA_DAC          = 0x4d
+    RFM_REG_DIO_MAPPING2    = 0x41
     
     } rfm_register_t;
 
@@ -94,11 +90,6 @@ typedef enum {
     RFM_MODE_LORA       = 0b10000000
     } frm_mode_t;
 
-typedef enum {
-    IRQ_RX_TIMEOUT_MASK     = 0b10000000,
-    IRQ_RX_DONE_MASK        = 0b01000000,
-    IRQ_TX_DONE_MASK        = 0b00001000
-    } irq_mask;
 
 /*
 *****************************************************************************************
@@ -113,12 +104,6 @@ void RFM_Continuous_Receive(sSettings *LoRa_Settings);
 message_t RFM_Get_Package(sBuffer *RFM_Rx_Package);
 void RFM_Write(unsigned char RFM_Address, unsigned char RFM_Data);
 void RFM_Switch_Mode(unsigned char Mode);
-void RFM_Set_Tx_Power(int level, int outputPin);
-bool RFM_isRxDone();
-void RFM_Set_OCP(unsigned char mA);
-
-unsigned char RFM_Get_Rssi();
-
 
 #endif
 
